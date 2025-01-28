@@ -341,6 +341,7 @@ export const updateStudent = async (
 };
 
 // first check prisma then clerk
+
 export const deleteStudent = async (
   currentState: CurrentState,
   data: FormData
