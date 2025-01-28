@@ -1,7 +1,6 @@
 # School Management System
 
 # G2 (100% UC implementation)
-
 how to run the development server:
 
 ```bash
