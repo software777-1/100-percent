@@ -231,21 +231,46 @@ export const deleteTeacher = async (
   data: FormData
 ) => {
   const id = data.get("id") as string;
-  try {
-    await clerkClient.users.deleteUser(id);
 
+  // Attempt to delete from Prisma
+  try {
     await prisma.teacher.delete({
       where: {
         id: id,
       },
     });
-
-    // revalidatePath("/list/teachers");
-    return { success: true, error: false };
+    console.log(`Successfully deleted teacher from Prisma database: ${id}`);
   } catch (err) {
-    console.log(err);
-    return { success: false, error: true };
+    console.error(`Failed to delete teacher from Prisma. ID: ${id}`, err);
+    return {
+      success: false,
+      error: true,
+      message: "Failed to delete teacher from database.",
+    };
   }
+
+  // Attempt to delete from Clerk
+  try {
+    await clerkClient.users.deleteUser(id);
+    console.log(`Successfully deleted teacher from Clerk: ${id}`);
+  } catch (err: any) {
+    if (err.status === 404) {
+      console.warn(`Teacher not found in Clerk: ${id}`);
+    } else {
+      console.error(`Failed to delete teacher from Clerk. ID: ${id}`, err);
+      return {
+        success: false,
+        error: true,
+        message: "Failed to delete teacher from Clerk.",
+      };
+    }
+  }
+
+  return {
+    success: true,
+    error: false,
+    message: "Successfully deleted teacher.",
+  };
 };
 
 export const createStudent = async (
@@ -347,21 +372,42 @@ export const deleteStudent = async (
   data: FormData
 ) => {
   const id = data.get("id") as string;
-  try {
-    await clerkClient.users.deleteUser(id);
 
+  // Attempt to delete from Prisma
+  try {
     await prisma.student.delete({
       where: {
         id: id,
       },
     });
-
-    // revalidatePath("/list/students");
-    return { success: true, error: false };
+    console.log(`Successfully deleted user from Prisma database: ${id}`);
   } catch (err) {
-    console.log(err);
-    return { success: false, error: true };
+    console.error(`Failed to delete user from Prisma. ID: ${id}`, err);
+    return {
+      success: false,
+      error: true,
+      message: "Failed to delete user from database.",
+    };
   }
+
+  // Attempt to delete from Clerk
+  try {
+    await clerkClient.users.deleteUser(id);
+    console.log(`Successfully deleted user from Clerk: ${id}`);
+  } catch (err: any) {
+    if (err.status === 404) {
+      console.warn(`User not found in Clerk: ${id}`);
+    } else {
+      console.error(`Failed to delete user from Clerk. ID: ${id}`, err);
+      return {
+        success: false,
+        error: true,
+        message: "Failed to delete user from Clerk.",
+      };
+    }
+  }
+
+  return { success: true, error: false, message: "Successfully deleted user." };
 };
 
 export const createExam = async (
