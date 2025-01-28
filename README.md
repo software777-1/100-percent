@@ -1,6 +1,7 @@
 # School Management System
 
 # G2 (100% UC implementation)
+
 how to run the development server:
 
 ```bash
@@ -12,6 +13,7 @@ pnpm dev
 # or
 bun dev
 ```
-#####
+
+###
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
