@@ -226,24 +226,28 @@ export const updateTeacher = async (
   }
 };
 
-export const deleteTeacher = async (
-  currentState: CurrentState,
-  data: FormData
-) => {
+export const deleteTeacher = (currentState: CurrentState, data: FormData) => {
   const id = data.get("id")?.toString();
   if (!id)
-    return { success: false, error: true, message: "Invalid teacher ID" };
+    return Promise.resolve({
+      success: false,
+      error: true,
+      message: "Teacher ID is required",
+    });
 
-  try {
-    const userDeletion = clerkClient.users.deleteUser(id);
-    const teacherDeletion = prisma.teacher.delete({ where: { id } });
-
-    await Promise.all([userDeletion, teacherDeletion]);
-
-    return { success: true, error: false };
-  } catch (err) {
-    return { success: false, error: true, message: "Error deleting teacher" };
-  }
+  return clerkClient.users
+    .deleteUser(id)
+    .then(() => prisma.teacher.delete({ where: { id } }))
+    .then((deletedTeacher) => ({
+      success: true,
+      error: false,
+      data: deletedTeacher,
+    }))
+    .catch(() => ({
+      success: false,
+      error: true,
+      message: "Failed to delete teacher",
+    }));
 };
 
 export const createStudent = async (
@@ -342,24 +346,28 @@ export const updateStudent = async (
 
 // first check prisma then clerk
 
-export const deleteStudent = async (
-  currentState: CurrentState,
-  data: FormData
-) => {
+export const deleteStudent = (currentState: CurrentState, data: FormData) => {
   const id = data.get("id")?.toString();
   if (!id)
-    return { success: false, error: true, message: "Invalid student ID" };
+    return Promise.resolve({
+      success: false,
+      error: true,
+      message: "Student ID is required",
+    });
 
-  try {
-    const userDeletion = clerkClient.users.deleteUser(id);
-    const studentDeletion = prisma.student.delete({ where: { id } });
-
-    await Promise.all([userDeletion, studentDeletion]);
-
-    return { success: true, error: false };
-  } catch (err) {
-    return { success: false, error: true, message: "Error deleting student" };
-  }
+  return clerkClient.users
+    .deleteUser(id)
+    .then(() => prisma.student.delete({ where: { id } }))
+    .then((deletedStudent) => ({
+      success: true,
+      error: false,
+      data: deletedStudent,
+    }))
+    .catch(() => ({
+      success: false,
+      error: true,
+      message: "Failed to delete student",
+    }));
 };
 
 export const createExam = async (
