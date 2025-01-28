@@ -230,20 +230,47 @@ export const deleteTeacher = async (
   currentState: CurrentState,
   data: FormData
 ) => {
-  const id = data.get("id")?.toString();
-  if (!id)
-    return { success: false, error: true, message: "Invalid teacher ID" };
+  const id = data.get("id") as string;
 
+  // Attempt to delete from Prisma
   try {
-    const userDeletion = clerkClient.users.deleteUser(id);
-    const teacherDeletion = prisma.teacher.delete({ where: { id } });
-
-    await Promise.all([userDeletion, teacherDeletion]);
-
-    return { success: true, error: false };
+    await prisma.teacher.delete({
+      where: {
+        id: id,
+      },
+    });
+    console.log(`Successfully deleted teacher from Prisma database: ${id}`);
   } catch (err) {
-    return { success: false, error: true, message: "Error deleting teacher" };
+    console.error(`Failed to delete teacher from Prisma. ID: ${id}`, err);
+    return {
+      success: false,
+      error: true,
+      message: "Failed to delete teacher from database (id doesn't exist).",
+    };
   }
+
+  // Attempt to delete from Clerk
+  try {
+    await clerkClient.users.deleteUser(id);
+    console.log(`Successfully deleted teacher from Clerk: ${id}`);
+  } catch (err: any) {
+    if (err.status === 404) {
+      console.warn(`Teacher not found in Clerk: ${id}`);
+    } else {
+      console.error(`Failed to delete teacher from Clerk. ID: ${id}`, err);
+      return {
+        success: false,
+        error: true,
+        message: "Failed to delete teacher from Clerk (id doesn't exist).",
+      };
+    }
+  }
+
+  return {
+    success: true,
+    error: false,
+    message: "Successfully deleted teacher.",
+  };
 };
 
 export const createStudent = async (
@@ -345,20 +372,43 @@ export const deleteStudent = async (
   currentState: CurrentState,
   data: FormData
 ) => {
-  const id = data.get("id")?.toString();
-  if (!id)
-    return { success: false, error: true, message: "Invalid student ID" };
+  const id = data.get("id") as string;
 
+  // Attempt to delete from Prisma
   try {
-    const userDeletion = clerkClient.users.deleteUser(id);
-    const studentDeletion = prisma.student.delete({ where: { id } });
-
-    await Promise.all([userDeletion, studentDeletion]);
-
-    return { success: true, error: false };
+    await prisma.student.delete({
+      where: {
+        id: id,
+      },
+    });
+    console.log(`Successfully deleted user from Prisma database: ${id}`);
   } catch (err) {
-    return { success: false, error: true, message: "Error deleting student" };
+    console.error(`Failed to delete user from Prisma. ID: ${id}`, err);
+    return {
+      success: false,
+      error: true,
+      message: "Failed to delete user from database (id doesn't exist).",
+    };
   }
+
+  // Attempt to delete from Clerk
+  try {
+    await clerkClient.users.deleteUser(id);
+    console.log(`Successfully deleted user from Clerk: ${id}`);
+  } catch (err: any) {
+    if (err.status === 404) {
+      console.warn(`User not found in Clerk: ${id}`);
+    } else {
+      console.error(`Failed to delete user from Clerk. ID: ${id}`, err);
+      return {
+        success: false,
+        error: true,
+        message: "Failed to delete user from Clerk (id doesn't exist).",
+      };
+    }
+  }
+
+  return { success: true, error: false, message: "Successfully deleted user." };
 };
 
 export const createExam = async (
