@@ -230,21 +230,19 @@ export const deleteTeacher = async (
   currentState: CurrentState,
   data: FormData
 ) => {
-  const id = data.get("id") as string;
+  const id = data.get("id")?.toString();
+  if (!id)
+    return { success: false, error: true, message: "Invalid teacher ID" };
+
   try {
-    await clerkClient.users.deleteUser(id);
+    const userDeletion = clerkClient.users.deleteUser(id);
+    const teacherDeletion = prisma.teacher.delete({ where: { id } });
 
-    await prisma.teacher.delete({
-      where: {
-        id: id,
-      },
-    });
+    await Promise.all([userDeletion, teacherDeletion]);
 
-    // revalidatePath("/list/teachers");
     return { success: true, error: false };
   } catch (err) {
-    console.log(err);
-    return { success: false, error: true };
+    return { success: false, error: true, message: "Error deleting teacher" };
   }
 };
 
@@ -347,21 +345,19 @@ export const deleteStudent = async (
   currentState: CurrentState,
   data: FormData
 ) => {
-  const id = data.get("id") as string;
+  const id = data.get("id")?.toString();
+  if (!id)
+    return { success: false, error: true, message: "Invalid student ID" };
+
   try {
-    await clerkClient.users.deleteUser(id);
+    const userDeletion = clerkClient.users.deleteUser(id);
+    const studentDeletion = prisma.student.delete({ where: { id } });
 
-    await prisma.student.delete({
-      where: {
-        id: id,
-      },
-    });
+    await Promise.all([userDeletion, studentDeletion]);
 
-    // revalidatePath("/list/students");
     return { success: true, error: false };
   } catch (err) {
-    console.log(err);
-    return { success: false, error: true };
+    return { success: false, error: true, message: "Error deleting student" };
   }
 };
 
