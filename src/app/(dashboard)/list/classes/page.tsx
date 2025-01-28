@@ -9,7 +9,7 @@ import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 
 type ClassList = Class & { supervisor: Teacher };
-
+//parsa noob sag
 const ClassListPage = async ({
   searchParams,
 }: {
