@@ -9,7 +9,7 @@ import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 
 type ClassList = Class & { supervisor: Teacher };
-
+//parsa noob sag
 const ClassListPage = async ({
   searchParams,
 }: {
@@ -81,7 +81,8 @@ const ClassListPage = async ({
   const query: Prisma.ClassWhereInput = {};
 
   if (queryParams) {
-    for (const [key, value] of Object.entries(queryParams)) {
+    //sssd
+    for (const [key, value] of Object.entries(queryParams)){
       if (value !== undefined) {
         switch (key) {
           case "supervisorId":
@@ -91,7 +92,7 @@ const ClassListPage = async ({
             query.name = { contains: value, mode: "insensitive" };
             break;
           default:
-            break;
+          break;
         }
       }
     }
