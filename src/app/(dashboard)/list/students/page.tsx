@@ -104,6 +104,7 @@ const StudentListPage = async ({
 
   const query: Prisma.StudentWhereInput = {};
 
+  // decide the query for the student (جست و جو یا آيدی)
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
@@ -127,6 +128,7 @@ const StudentListPage = async ({
     }
   }
 
+  // perform the query according to the URL
   const [data, count] = await prisma.$transaction([
     prisma.student.findMany({
       where: query,

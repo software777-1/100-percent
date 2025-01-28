@@ -73,10 +73,9 @@ const LessonListPage = async ({
 
   const p = page ? parseInt(page) : 1;
 
-  // URL PARAMS CONDITION
-
   const query: Prisma.LessonWhereInput = {};
 
+  // decide the query for the lessons (جست و جو یا آيدی)
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
@@ -100,6 +99,7 @@ const LessonListPage = async ({
     }
   }
 
+  // perform the query according to the URL
   const [data, count] = await prisma.$transaction([
     prisma.lesson.findMany({
       where: query,
