@@ -1,6 +1,6 @@
 # School Management System
 
-# G2 (50% UC implementation)
+# G2 (100% UC implementation)
 
 how to run the development server:
 
