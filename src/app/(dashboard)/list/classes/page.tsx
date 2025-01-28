@@ -82,7 +82,7 @@ const ClassListPage = async ({
 
   if (queryParams) {
     //sssd
-    for (const [key, value] of Object.entries(queryParams)) {
+    for (const [key, value] of Object.entries(queryParams)){
       if (value !== undefined) {
         switch (key) {
           case "supervisorId":
