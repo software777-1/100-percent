@@ -81,6 +81,7 @@ const ClassListPage = async ({
   const query: Prisma.ClassWhereInput = {};
 
   if (queryParams) {
+    //sssd
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
@@ -91,7 +92,7 @@ const ClassListPage = async ({
             query.name = { contains: value, mode: "insensitive" };
             break;
           default:
-            break;
+          break;
         }
       }
     }
