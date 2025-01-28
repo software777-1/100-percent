@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import {
   RadialBarChart,
   RadialBar,
@@ -8,11 +9,22 @@ import {
 
 const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
   const data = [
-    { name: "Total", count: boys + girls, fill: "#ffffff" },
-    { name: "Girls", count: girls, fill: "#BB86FC" },
-    { name: "Boys", count: boys, fill: "#03dac6" },
+    {
+      name: "Total",
+      count: boys + girls,
+      fill: "white",
+    },
+    {
+      name: "Girls",
+      count: girls,
+      fill: "#BB86FC",
+    },
+    {
+      name: "Boys",
+      count: boys,
+      fill: "#03dac6",
+    },
   ];
-
   return (
     <div className="relative w-full h-[75%]">
       <ResponsiveContainer>
@@ -25,22 +37,15 @@ const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
           data={data}
         >
           <RadialBar background dataKey="count" />
-          <Legend
-            align="center"
-            verticalAlign="bottom"
-            iconType="circle"
-            wrapperStyle={{ paddingTop: "10px" }}
-          />
         </RadialBarChart>
       </ResponsiveContainer>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img
-          src="/maleFemale.png"
-          alt="Gender Distribution"
-          width={50}
-          height={50}
-        />
-      </div>
+      <Image
+        src="/maleFemale.png"
+        alt=""
+        width={50}
+        height={50}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+      />
     </div>
   );
 };
