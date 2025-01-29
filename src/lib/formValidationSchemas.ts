@@ -1,4 +1,5 @@
 import { z } from "zod";
+// Zod: a library used to check type based on schema
 
 export const subjectSchema = z.object({
   id: z.coerce.number().optional(),
