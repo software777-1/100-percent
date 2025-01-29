@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import {
   ClassSchema,
   ExamSchema,
@@ -560,9 +559,6 @@ export const updateEvent = async (
         endTime: data.endTime,
       },
     });
-
-    // Optionally revalidate the path to update the client-side cache
-    // revalidatePath("/list/events");
 
     return { success: true, error: false };
   } catch (err) {
