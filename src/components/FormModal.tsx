@@ -129,8 +129,8 @@ const FormModal = ({
     type === "create"
       ? "bg-customPurple"
       : type === "update"
-        ? "bg-SchoolSky"
-        : "bg-SchoolPurple";
+      ? "bg-SchoolSky"
+      : "bg-SchoolPurple";
 
   const [open, setOpen] = useState(false);
 
@@ -154,15 +154,17 @@ const FormModal = ({
       <form action={formAction} className="p-4 flex flex-col gap-4">
         <input type="text | number" name="id" value={id} hidden />
         <span className="text-center font-medium text-white">
-  All data will be lost. Are you sure you want to delete this {table}?
-</span>
+          All data will be lost. Are you sure you want to delete this {table}?
+        </span>
 
         <button className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center">
           Delete
         </button>
       </form>
-    ) : type === "create" || type === "update" ? (
-      forms[table](setOpen, type, data, relatedData)
+    ) : (type === "create" || type === "update") &&
+      typeof forms?.[table]?.(setOpen, type, data, relatedData) ===
+        "function" ? (
+      forms?.[table]?.(setOpen, type, data, relatedData)
     ) : (
       "Form not found!"
     );
