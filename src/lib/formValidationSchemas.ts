@@ -98,3 +98,15 @@ export const eventSchema = z.object({
 });
 
 export type EventSchema = z.infer<typeof eventSchema>;
+
+export const parentSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters long"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+  name: z.string().min(1, "Name is required"),
+  surname: z.string().min(1, "Surname is required"),
+  email: z.string().email("Invalid email format").optional().nullable(),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  address: z.string().min(5, "Address must be at least 5 characters long"),
+  students: z.array(z.string()).optional(), // Array of student IDs
+});
+export type ParentSchema = z.infer<typeof parentSchema>;
