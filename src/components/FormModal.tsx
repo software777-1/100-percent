@@ -14,6 +14,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import { FormContainerProps } from "./FormContainer";
+import ParentForm from "./forms/ParentForm";
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -115,6 +116,14 @@ const forms: {
     />
     // TODO OTHER LIST ITEMS
   ),
+  parent: (setOpen, type, data, relatedData) => (
+    <ParentForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
 };
 
 const FormModal = ({
@@ -129,8 +138,8 @@ const FormModal = ({
     type === "create"
       ? "bg-customPurple"
       : type === "update"
-      ? "bg-SchoolSky"
-      : "bg-SchoolPurple";
+        ? "bg-SchoolSky"
+        : "bg-SchoolPurple";
 
   const [open, setOpen] = useState(false);
 
@@ -161,9 +170,7 @@ const FormModal = ({
           Delete
         </button>
       </form>
-    ) : (type === "create" || type === "update") &&
-      typeof forms?.[table]?.(setOpen, type, data, relatedData) ===
-        "function" ? (
+    ) : type === "create" || type === "update" ? (
       forms?.[table]?.(setOpen, type, data, relatedData)
     ) : (
       "Form not found!"
