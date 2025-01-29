@@ -7,6 +7,7 @@ import {
   SubjectSchema,
   TeacherSchema,
   EventSchema,
+  ParentSchema,
 } from "./formValidationSchemas";
 import prisma from "./prisma";
 import { clerkClient } from "@clerk/nextjs/server";
@@ -27,7 +28,6 @@ export const createSubject = async (
       },
     });
 
-    // revalidatePath("/list/subjects");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -52,7 +52,6 @@ export const updateSubject = async (
       },
     });
 
-    // revalidatePath("/list/subjects");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -72,7 +71,6 @@ export const deleteSubject = async (
       },
     });
 
-    // revalidatePath("/list/subjects");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -89,7 +87,6 @@ export const createClass = async (
       data,
     });
 
-    // revalidatePath("/list/class");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -109,7 +106,6 @@ export const updateClass = async (
       data,
     });
 
-    // revalidatePath("/list/class");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -129,7 +125,6 @@ export const deleteClass = async (
       },
     });
 
-    // revalidatePath("/list/class");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -171,7 +166,6 @@ export const createTeacher = async (
       },
     });
 
-    // revalidatePath("/list/teachers");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -314,7 +308,6 @@ export const createStudent = async (
       },
     });
 
-    // revalidatePath("/list/students");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -358,7 +351,6 @@ export const updateStudent = async (
         parentId: data.parentId,
       },
     });
-    // revalidatePath("/list/students");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -440,7 +432,6 @@ export const createExam = async (
       },
     });
 
-    // revalidatePath("/list/subjects");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -481,7 +472,6 @@ export const updateExam = async (
       },
     });
 
-    // revalidatePath("/list/subjects");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -506,7 +496,6 @@ export const deleteExam = async (
       },
     });
 
-    // revalidatePath("/list/subjects");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
@@ -530,7 +519,6 @@ export const createEvent = async (
     });
 
     // Optionally revalidate the path to update the client-side cache
-    // revalidatePath("/list/events");
 
     return { success: true, error: false };
   } catch (err) {
@@ -581,12 +569,47 @@ export const deleteEvent = async (
       },
     });
 
-    // Optionally revalidate the path to update the client-side cache
-    // revalidatePath("/list/events");
-
     return { success: true, error: false };
   } catch (err) {
     console.error("Error deleting event:", err);
+    return { success: false, error: true };
+  }
+};
+
+export const createParent = async (
+  currentState: CurrentState,
+  data: ParentSchema
+) => {
+  try {
+    const user = await clerkClient.users.createUser({
+      username: data.username,
+      password: data.password,
+      firstName: data.name,
+      lastName: data.surname,
+      publicMetadata: { role: "parent" },
+    });
+
+    await prisma.parent.create({
+      data: {
+        id: user.id,
+        username: data.username,
+        name: data.name,
+        surname: data.surname,
+        email: data.email || null,
+        phone: data.phone,
+        address: data.address,
+        students: {
+          connect: data.students?.map((studentId: string) => ({
+            id: studentId,
+          })),
+        },
+      },
+    });
+
+    // revalidatePath("/list/parents");
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
     return { success: false, error: true };
   }
 };
