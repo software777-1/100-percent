@@ -4,5 +4,6 @@ const config = {
     tailwindcss: {},
   },
 };
-
+/**this is for postcss */
+/** ds*/
 export default config;
